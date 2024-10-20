@@ -1,6 +1,8 @@
 package com.Tokio.service;
 import com.Tokio.model.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import lombok.Getter;
@@ -32,11 +34,16 @@ public class GestionePrenotazioni {
         String email = scanner.next();
         System.out.println("Inserisci il tuo numero di telefono:");
         String telefono = scanner.next();
+
         Random rand = new Random();
         int codice=rand.nextInt(1000);
-        String idcliente =new Date() + String.valueOf(codice);
+
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        String idcliente = today.format(formatter) + String.valueOf(codice);
+
         Cliente cliente = new Cliente(nome, cognome, email, telefono, null, idcliente);
-        cliente.toString();
+        System.out.println(cliente);
         listaclienti.add(cliente);
     }
 

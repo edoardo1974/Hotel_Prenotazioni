@@ -31,6 +31,7 @@ public class Cliente extends Dati {
                 ", email='" + email + '\'' +
                 ", telefono='" + telefono + '\'' +
                 ", prenotazione=" + prenotazione +
+                ", idcliente=" + getIdcliente() +
                 '}';
     }
 }
