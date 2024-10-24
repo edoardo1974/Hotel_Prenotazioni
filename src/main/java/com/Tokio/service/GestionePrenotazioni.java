@@ -54,6 +54,20 @@ public class GestionePrenotazioni {
     }
 
     public void aggiungiPrenotazione() {
+        System.out.println("Inserisci la data di arrivo:");
+        String data_arrivo = scanner.next();
+        System.out.println("Inserisci la data di partenza:");
+        String data_partenza = scanner.next();
+        System.out.println("Inserisci il numero di notti:");
+        int numero_notti = scanner.nextInt();
+        System.out.println("Inserisci il tuo id cliente:");
+        String idcliente = scanner.next();
+        System.out.println("Inserisci il numero della camera:");
+        int numerocamera = scanner.nextInt();
+
+        Prenotazioni prenotazione = new Prenotazioni(data_arrivo, data_partenza, numero_notti, idcliente, numerocamera);
+        System.out.println(prenotazione);
+        listaprenotazioni.add(prenotazione);
     }
 
     public void visualizzaCamereDisponibili() {
@@ -99,4 +113,6 @@ public class GestionePrenotazioni {
 
         }
     }
+
+
 }
