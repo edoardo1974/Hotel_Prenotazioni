@@ -13,11 +13,12 @@ public class Prenotazioni extends Dati {
     }
 
 
-
-
-
-
-
-
-
+    @Override
+    public String toString() {
+        return "Prenotazioni{" +
+                "data_arrivo='" + data_arrivo + '\'' +
+                ", data_partenza='" + data_partenza + '\'' +
+                ", numero_notti=" + numero_notti +
+                '}';
+    }
 }

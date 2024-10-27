@@ -11,10 +11,12 @@ import lombok.Setter;
 public class GestionePrenotazioni {
     private List<com.Tokio.model.Prenotazioni> listaprenotazioni = new ArrayList<com.Tokio.model.Prenotazioni>();
     private List<Cliente> listaclienti = new ArrayList<Cliente>();
+    private List<Camera> listacamera = new ArrayList<Camera>();
     @Setter
     @Getter
     private int selezione;
     static Scanner scanner = new Scanner(System.in);
+
 
     /*public GestionePrenotazioni(List<Prenotazioni> listaprenotazioni) {
         this.listaprenotazioni = listaprenotazioni;
@@ -23,6 +25,14 @@ public class GestionePrenotazioni {
      */
 
     public void aggiungiCamera() {
+        listacamera.add(new Camera(100, "libera", null, "singola", 1));
+        listacamera.add(new Camera(150, "libera", null, "doppia", 2));
+        listacamera.add(new Camera(200, "libera", null, "suite", 3));
+        listacamera.add(new Camera(250, "libera", null, "suite", 4));
+        listacamera.add(new Camera(300, "libera", null, "suite", 5));
+        for(int i = 0; i < listacamera.size(); i++) {
+            System.out.println(listacamera.get(i));
+        }
     }
 
     public void aggiungiCliente() {
@@ -52,6 +62,7 @@ public class GestionePrenotazioni {
 
     public void cancellaPrenotazione() {
     }
+
 
     public void aggiungiPrenotazione() {
         System.out.println("Inserisci la data di arrivo:");
@@ -87,8 +98,9 @@ public class GestionePrenotazioni {
                 "Premi 6 per uscire dal sistema\n");
 
         GestionePrenotazioni gestionePrenotazioni = new GestionePrenotazioni();
+        gestionePrenotazioni.aggiungiCamera();
 
-        gestionePrenotazioni.setSelezione(scanner.nextInt());
+        /*gestionePrenotazioni.setSelezione(scanner.nextInt());
 
         switch(gestionePrenotazioni.getSelezione()) {
             case 1:
@@ -109,10 +121,12 @@ public class GestionePrenotazioni {
             case 6:
                 System.out.println("Arrivederci!");
                 break;
-
-
         }
+
+         */
     }
+
+
 
 
 }

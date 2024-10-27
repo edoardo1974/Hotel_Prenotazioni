@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class Test_1 extends GestionePrenotazioni {
     private final List<Cliente> listaclienti = new ArrayList<Cliente>();
     private List<com.Tokio.model.Prenotazioni> listaprenotazioni = new ArrayList<com.Tokio.model.Prenotazioni>();
+    private List<com.Tokio.model.Camera> listacamera = new ArrayList<com.Tokio.model.Camera>();
 
     @Test
     public void aggiungiClienteAddsClienteToList() {
@@ -25,6 +26,17 @@ public class Test_1 extends GestionePrenotazioni {
     public void aggiungiPrenotazioneAddsBookingToList() {
         Test_1 test2 = new Test_1();
         test2.aggiungiPrenotazione("2021-12-01", "2021-12-05", 4, "202112010", 1);
+        System.out.println(test2.listaprenotazioni);
+    }
+
+    @Test
+    public void aggiungiCameraAddsRoomToList() {
+        Test_1 test3 = new Test_1();
+        test3.aggiungiCamera();
+        System.out.println(test3.listacamera);
+        for(int i = 0; i < test3.listacamera.size(); i++) {
+            System.out.println(test3.listacamera.get(i));
+        }
     }
 
     /*@Test
@@ -87,9 +99,10 @@ public class Test_1 extends GestionePrenotazioni {
 
 
     public static void main(String[] args) {
-        Test_1 test1 = new Test_1();
+        //Test_1 test1 = new Test_1();
 
-        test1.aggiungiClienteAddsClienteToList();
-        test1.aggiungiPrenotazioneAddsBookingToList();
+        //test1.aggiungiClienteAddsClienteToList();
+       // test1.aggiungiPrenotazioneAddsBookingToList();
+        //test1.aggiungiCameraAddsRoomToList();
     }
 }

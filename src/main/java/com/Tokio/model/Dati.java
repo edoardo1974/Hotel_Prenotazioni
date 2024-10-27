@@ -4,8 +4,11 @@ import lombok.Setter;
 
 public abstract class Dati {
     @Getter
+    @Setter
     private String idcliente;
+    @Getter
     private String tipodicamera;
+    @Getter
     private int numerocamera;
 
 
@@ -24,6 +27,8 @@ public abstract class Dati {
         this.idcliente = idcliente;
         this.numerocamera = numerocamera;
     }
+
+
 
 
 }

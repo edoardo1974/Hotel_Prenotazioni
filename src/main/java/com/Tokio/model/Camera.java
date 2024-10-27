@@ -1,4 +1,6 @@
 package com.Tokio.model;
+import lombok.Getter;
+import lombok.Setter;
 
 public class Camera extends Dati {
 
@@ -10,4 +12,14 @@ public class Camera extends Dati {
         this.prezzo_notte = prezzo_notte;
         this.stato_camera = stato_camera;
     }
+
+    @Override
+    public String toString() {
+        return "Camera{" +
+                "prezzo_notte=" + prezzo_notte +
+                ", stato_camera=" + stato_camera + '\'' + ", tipo di camera=" + getTipodicamera() + ", numero camera=" + getNumerocamera() +
+                '}';
+    }
 }
+
+
