@@ -3,8 +3,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 public class Camera extends Dati {
-
+    @Getter
     private int prezzo_notte;
+    @Getter
     private String stato_camera;
 
     public Camera(int prezzo_notte, String stato_camera, String idcliente, String tipodicamera, int numerocamera) {
@@ -19,6 +20,10 @@ public class Camera extends Dati {
                 "prezzo_notte=" + prezzo_notte +
                 ", stato_camera=" + stato_camera + '\'' + ", tipo di camera=" + getTipodicamera() + ", numero camera=" + getNumerocamera() +
                 '}';
+    }
+
+    public String getStato_camera() {
+        return stato_camera;
     }
 }
 

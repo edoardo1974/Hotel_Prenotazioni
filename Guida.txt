@@ -1,0 +1,64 @@
+Esercizio: Sistema di Gestione Prenotazioni per un Hotel
+Requisiti:
+Devi implementare un'applicazione Java che gestisce le prenotazioni in un hotel. L'applicazione deve gestire le seguenti funzionalità:
+
+Gestione delle Camere:
+
+Definisci una classe Camera con i seguenti attributi:
+
+  Numero di camera **
+  Tipo di camera (singola, doppia, suite)**
+  Prezzo per notte
+  Stato della camera (disponibile o occupata)
+  Fornisci metodi per ottenere e modificare lo stato della camera.
+
+Gestione Clienti:
+
+  Definisci una classe Cliente con i seguenti attributi:
+  Nome
+  Cognome
+  ID Cliente (univoco) **
+  Email
+  Telefono
+  Prenotazioni:
+
+Definisci una classe Prenotazione con i seguenti attributi:
+
+  Cliente **
+  Camera **
+  Data di check-in
+  Data di check-out
+  Numero di notti
+  La classe Prenotazione deve calcolare automaticamente il totale della prenotazione (numero di notti * prezzo per notte della camera).
+
+Gestione delle Prenotazioni:
+
+Definisci una classe GestorePrenotazioni che contiene una lista di camere e una lista di prenotazioni. Questa classe deve fornire metodi per:
+Aggiungere una nuova camera
+Aggiungere un nuovo cliente
+Effettuare una nuova prenotazione (solo se la camera è disponibile)
+Visualizzare tutte le prenotazioni
+Visualizzare tutte le camere disponibili
+Cancellare una prenotazione
+Eccezioni Personalizzate:
+
+Definisci eccezioni personalizzate per gestire i seguenti scenari:
+Tentativo di prenotare una camera non disponibile.
+Cliente con dati non validi.
+Data di check-in successiva alla data di check-out.
+Concorrente (Thread):
+
+Gestisci la concorrenza per simulare prenotazioni multiple allo stesso tempo. Usa i thread per simulare più clienti che cercano di effettuare prenotazioni contemporaneamente. Assicurati che le prenotazioni vengano gestite correttamente senza conflitti.
+Gestione Input/Output:
+
+Salva le informazioni delle prenotazioni su un file di testo e caricale all'avvio del programma.
+Bonus (Facoltativo):
+Implementa un sistema di notifiche via email (simulata) per confermare una prenotazione, utilizzando ScheduledExecutorService per simulare l'invio dell'email dopo 2 secondi dalla prenotazione.
+
+Suggerimenti Tecnici:
+
+Usa interfacce, classi astratte e polimorfismo dove appropriato.
+Usa collezioni come ArrayList, HashMap e HashSet per gestire le liste di clienti, camere e prenotazioni.
+Implementa un metodo per serializzare e deserializzare le prenotazioni (tramite ObjectInputStream e ObjectOutputStream).
+Assicurati di gestire correttamente le eccezioni e di seguire le buone pratiche di gestione della concorrenza.
+In bocca al lupo con l'esercizio! Sentiti libero di farmi domande se hai bisogno di ulteriori chiarimenti.

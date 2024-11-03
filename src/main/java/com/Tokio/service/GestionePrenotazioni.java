@@ -9,8 +9,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 public class GestionePrenotazioni {
+    @Getter
     private List<com.Tokio.model.Prenotazioni> listaprenotazioni = new ArrayList<com.Tokio.model.Prenotazioni>();
+    @Getter
     private List<Cliente> listaclienti = new ArrayList<Cliente>();
+    @Getter
     private List<Camera> listacamera = new ArrayList<Camera>();
     @Setter
     @Getter
@@ -25,7 +28,7 @@ public class GestionePrenotazioni {
      */
 
     public void aggiungiCamera() {
-        listacamera.add(new Camera(100, "libera", null, "singola", 1));
+        listacamera.add(new Camera(100, "occupata", null, "singola", 1));
         listacamera.add(new Camera(150, "libera", null, "doppia", 2));
         listacamera.add(new Camera(200, "libera", null, "suite", 3));
         listacamera.add(new Camera(250, "libera", null, "suite", 4));
@@ -33,9 +36,11 @@ public class GestionePrenotazioni {
         for(int i = 0; i < listacamera.size(); i++) {
             System.out.println(listacamera.get(i));
         }
+        System.out.println(" ");
     }
 
     public void aggiungiCliente() {
+        System.out.println("AGGIUNGI UN CLIENTE ");
         System.out.println("Inserisci il tuo nome:");
         String nome = scanner.next();
         System.out.println("Inserisci il tuo cognome:");
@@ -57,7 +62,14 @@ public class GestionePrenotazioni {
         listaclienti.add(cliente);
     }
 
-    public void visualizzaPrenotazioni() {
+    public void visualizzaCamereDisponibili() {
+        System.out.println("VISUALIZZA CAMERE DISPONIBILI ");
+        for(int i = 0; i < listacamera.size(); i++) {
+            if(listacamera.get(i).getStato_camera().equals("libera")) {
+                System.out.println(listacamera.get(i));
+            }
+        }
+        System.out.println(" ");
     }
 
     public void cancellaPrenotazione() {
@@ -65,14 +77,15 @@ public class GestionePrenotazioni {
 
 
     public void aggiungiPrenotazione() {
+        System.out.println("AGGIUNGI UNA PRENOTAZIONE ");
+        System.out.println("Inserisci il tuo id cliente:");
+        String idcliente = scanner.next();
         System.out.println("Inserisci la data di arrivo:");
         String data_arrivo = scanner.next();
         System.out.println("Inserisci la data di partenza:");
         String data_partenza = scanner.next();
         System.out.println("Inserisci il numero di notti:");
         int numero_notti = scanner.nextInt();
-        System.out.println("Inserisci il tuo id cliente:");
-        String idcliente = scanner.next();
         System.out.println("Inserisci il numero della camera:");
         int numerocamera = scanner.nextInt();
 
@@ -81,7 +94,16 @@ public class GestionePrenotazioni {
         listaprenotazioni.add(prenotazione);
     }
 
-    public void visualizzaCamereDisponibili() {
+    public void visualizzaPrenotazioni() {
+        System.out.println("VISUALIZZA UNA PRENOTAZIONE ");
+        System.out.println("Inserisci il tuo codice utente");
+        String codicecliente = scanner.next();
+        for(int i = 0; i < listaprenotazioni.size(); i++) {
+            if(listaprenotazioni.get(i).getIdcliente().equals(codicecliente)) {
+                System.out.println(listaprenotazioni.get(i));
+            }
+        }
+
     }
 
 
@@ -99,6 +121,10 @@ public class GestionePrenotazioni {
 
         GestionePrenotazioni gestionePrenotazioni = new GestionePrenotazioni();
         gestionePrenotazioni.aggiungiCamera();
+        gestionePrenotazioni.visualizzaCamereDisponibili();
+        gestionePrenotazioni.aggiungiCliente();
+        gestionePrenotazioni.aggiungiPrenotazione();
+        gestionePrenotazioni.visualizzaPrenotazioni();
 
         /*gestionePrenotazioni.setSelezione(scanner.nextInt());
 

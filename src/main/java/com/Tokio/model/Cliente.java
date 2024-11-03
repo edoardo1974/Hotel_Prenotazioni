@@ -8,8 +8,11 @@ public class Cliente extends Dati {
     @Getter
     @Setter
     private String nome;
+    @Getter
     private String cognome;
+    @Getter
     private String email;
+    @Getter
     private String telefono;
     private Prenotazioni prenotazione;
 
@@ -32,6 +35,6 @@ public class Cliente extends Dati {
                 ", telefono='" + telefono + '\'' +
                 ", prenotazione=" + prenotazione +
                 ", idcliente=" + getIdcliente() +
-                '}';
+                '}'+"\n";
     }
 }
