@@ -33,34 +33,61 @@ public class GestionePrenotazioni {
         listacamera.add(new Camera(200, "libera", null, "suite", 3));
         listacamera.add(new Camera(250, "libera", null, "suite", 4));
         listacamera.add(new Camera(300, "libera", null, "suite", 5));
-        for(int i = 0; i < listacamera.size(); i++) {
+        /*for(int i = 0; i < listacamera.size(); i++) {
             System.out.println(listacamera.get(i));
         }
+
+         */
         System.out.println(" ");
     }
 
     public void aggiungiCliente() {
-        System.out.println("AGGIUNGI UN CLIENTE ");
-        System.out.println("Inserisci il tuo nome:");
-        String nome = scanner.next();
-        System.out.println("Inserisci il tuo cognome:");
-        String cognome = scanner.next();
-        System.out.println("Inserisci la tua email:");
-        String email = scanner.next();
-        System.out.println("Inserisci il tuo numero di telefono:");
-        String telefono = scanner.next();
+        boolean validinput = false;
+        while(!validinput) {
+            try {
+                System.out.println("AGGIUNGI UN CLIENTE ");
+                System.out.println("Inserisci il tuo nome:");
+                String nome = scanner.next();
+                if (!nome.matches("[a-zA-Z]+")) {
+                    throw new IllegalArgumentException("Errore: Il nome deve contenere solo lettere.");
+                }
+                System.out.println("Inserisci il tuo cognome:");
+                String cognome = scanner.next();
+                if (!nome.matches("[a-zA-Z]+")) {
+                    throw new IllegalArgumentException("Errore: Il cognome deve contenere solo lettere.");
+                }
+                System.out.println("Inserisci la tua email:");
+                String email = scanner.next();
+                if (!email.matches("^(.+)@(.+)$")) {
+                    throw new IllegalArgumentException("Errore: Inserisci un'email valida.");
+                }
+                System.out.println("Inserisci il tuo numero di telefono:");
+                String telefono = scanner.next();
+                if (!telefono.matches("[0-9]+")) {
+                    throw new IllegalArgumentException("Errore: Inserisci un numero di telefono valido.");
+                }
 
-        Random rand = new Random();
-        int codice=rand.nextInt(1000);
+                Random rand = new Random();
+                int codice = rand.nextInt(1000);
 
-        LocalDate today = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-        String idcliente = today.format(formatter) + String.valueOf(codice);
+                LocalDate today = LocalDate.now();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+                String idcliente = today.format(formatter) + String.valueOf(codice);
 
-        Cliente cliente = new Cliente(nome, cognome, email, telefono, null, idcliente);
-        System.out.println(cliente);
-        listaclienti.add(cliente);
+                Cliente cliente = new Cliente(nome, cognome, email, telefono, null, idcliente);
+                System.out.println(cliente);
+                listaclienti.add(cliente);
+                validinput = true;
+            } catch (InputMismatchException e) {
+                System.out.println("Errore: Inserisci un numero valido.");
+                scanner.next();
+            }
+            catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
+        }
     }
+
 
     public void visualizzaCamereDisponibili() {
         System.out.println("VISUALIZZA CAMERE DISPONIBILI ");
@@ -73,25 +100,42 @@ public class GestionePrenotazioni {
     }
 
     public void cancellaPrenotazione() {
+        System.out.println("CANCELLA PRENOTAZIONE /n Inserisci il tuo id cliente:");
+        String idcliente = scanner.next();
+
+        for(int i=0;i<listaprenotazioni.size();i++) {
+            if(listaprenotazioni.get(i).getIdcliente().equals(idcliente)) {
+                listaprenotazioni.remove(i);
+            }
+        }
+
     }
 
 
     public void aggiungiPrenotazione() {
-        System.out.println("AGGIUNGI UNA PRENOTAZIONE ");
-        System.out.println("Inserisci il tuo id cliente:");
-        String idcliente = scanner.next();
-        System.out.println("Inserisci la data di arrivo:");
-        String data_arrivo = scanner.next();
-        System.out.println("Inserisci la data di partenza:");
-        String data_partenza = scanner.next();
-        System.out.println("Inserisci il numero di notti:");
-        int numero_notti = scanner.nextInt();
-        System.out.println("Inserisci il numero della camera:");
-        int numerocamera = scanner.nextInt();
+        try{
+            System.out.println("AGGIUNGI UNA PRENOTAZIONE ");
+            System.out.println("Inserisci il tuo id cliente:");
+            String idcliente = scanner.next();
+            System.out.println("Inserisci la data di arrivo:");
+            String data_arrivo = scanner.next();
+            System.out.println("Inserisci la data di partenza:");
+            String data_partenza = scanner.next();
+            System.out.println("Inserisci il numero di notti:");
+            int numero_notti = scanner.nextInt();
+            System.out.println("Inserisci il numero della camera:");
+            int numerocamera = scanner.nextInt();
 
-        Prenotazioni prenotazione = new Prenotazioni(data_arrivo, data_partenza, numero_notti, idcliente, numerocamera);
-        System.out.println(prenotazione);
-        listaprenotazioni.add(prenotazione);
+            Prenotazioni prenotazione = new Prenotazioni(data_arrivo, data_partenza, numero_notti, idcliente, numerocamera);
+            System.out.println(prenotazione);
+            listaprenotazioni.add(prenotazione);
+        } catch (InputMismatchException e) {
+            System.out.println("Errore: Inserisci un numero valido.");
+            scanner.next();
+        }
+        catch (Exception e) {
+            System.out.println("Si è verificato un errore: " + e.getMessage());
+        }
     }
 
     public void visualizzaPrenotazioni() {
@@ -121,12 +165,13 @@ public class GestionePrenotazioni {
 
         GestionePrenotazioni gestionePrenotazioni = new GestionePrenotazioni();
         gestionePrenotazioni.aggiungiCamera();
-        gestionePrenotazioni.visualizzaCamereDisponibili();
-        gestionePrenotazioni.aggiungiCliente();
-        gestionePrenotazioni.aggiungiPrenotazione();
-        gestionePrenotazioni.visualizzaPrenotazioni();
+        //gestionePrenotazioni.visualizzaCamereDisponibili();
+        //gestionePrenotazioni.aggiungiCliente();
+        //gestionePrenotazioni.aggiungiPrenotazione();
+        //gestionePrenotazioni.visualizzaPrenotazioni();
+        //gestionePrenotazioni.cancellaPrenotazione();
 
-        /*gestionePrenotazioni.setSelezione(scanner.nextInt());
+        gestionePrenotazioni.setSelezione(scanner.nextInt());
 
         switch(gestionePrenotazioni.getSelezione()) {
             case 1:
@@ -149,7 +194,7 @@ public class GestionePrenotazioni {
                 break;
         }
 
-         */
+
     }
 
 

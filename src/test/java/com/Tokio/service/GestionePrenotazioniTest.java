@@ -62,6 +62,17 @@ class GestionePrenotazioniTest {
 
 
     @Test
-    void visualizzaPrenotazioni() {
+    public void test_remove_reservation_with_valid_id() {
+        GestionePrenotazioni gestionePrenotazioni = new GestionePrenotazioni();
+        Prenotazioni prenotazione = new Prenotazioni("2023-10-01", "2023-10-05", 4, "20231001001", 1);
+        gestionePrenotazioni.getListaprenotazioni().add(prenotazione);
+
+        Scanner scanner = new Scanner(new java.io.ByteArrayInputStream("20231001001\n".getBytes()));
+
+        GestionePrenotazioni.scanner = scanner;
+
+        gestionePrenotazioni.cancellaPrenotazione();
+
+        assertTrue(gestionePrenotazioni.getListaprenotazioni().isEmpty());
     }
 }
