@@ -8,6 +8,8 @@ import java.util.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import static com.ibm.icu.text.PluralRules.Operand.e;
+
 public class GestionePrenotazioni {
     @Getter
     private List<com.Tokio.model.Prenotazioni> listaprenotazioni = new ArrayList<com.Tokio.model.Prenotazioni>();
@@ -113,28 +115,46 @@ public class GestionePrenotazioni {
 
 
     public void aggiungiPrenotazione() {
-        try{
-            System.out.println("AGGIUNGI UNA PRENOTAZIONE ");
-            System.out.println("Inserisci il tuo id cliente:");
-            String idcliente = scanner.next();
-            System.out.println("Inserisci la data di arrivo:");
-            String data_arrivo = scanner.next();
-            System.out.println("Inserisci la data di partenza:");
-            String data_partenza = scanner.next();
-            System.out.println("Inserisci il numero di notti:");
-            int numero_notti = scanner.nextInt();
-            System.out.println("Inserisci il numero della camera:");
-            int numerocamera = scanner.nextInt();
+        boolean validinput = false;
+        while(!validinput) {
+            try {
+                System.out.println("AGGIUNGI UNA PRENOTAZIONE ");
+                System.out.println("Inserisci il tuo id cliente:");
+                String idcliente = scanner.next();
+                if (!idcliente.matches("[0-9]{11}")) {
+                    throw new IllegalArgumentException("Errore: Il codice cliente deve contenere 11 numeri.");
+                }
+                System.out.println("Inserisci la data di arrivo yy-mm-dd:");
+                String data_arrivo = scanner.next();
+                if (!data_arrivo.matches("\\d{4}-\\d{2}-\\d{2}")) {
+                    throw new IllegalArgumentException("Errore: Inserisci una data valida.");
+                }
+                System.out.println("Inserisci la data di partenza yy-mm-dd:");
+                String data_partenza = scanner.next();
+                if (!data_partenza.matches("\\d{4}-\\d{2}-\\d{2}")) {
+                    throw new IllegalArgumentException("Errore: Inserisci una data valida.");
+                }
+                System.out.println("Inserisci il numero di notti:");
+                int numero_notti = scanner.nextInt();
+                if (numero_notti < 1) {
+                    throw new IllegalArgumentException("Errore: Inserisci un numero di notti valido.");
+                }
+                System.out.println("Inserisci il numero della camera:");
+                int numerocamera = scanner.nextInt();
+                if (numerocamera < 1 || numerocamera > 5) {
+                    throw new IllegalArgumentException("Errore: Inserisci un numero di camera valido.");
+                }
 
-            Prenotazioni prenotazione = new Prenotazioni(data_arrivo, data_partenza, numero_notti, idcliente, numerocamera);
-            System.out.println(prenotazione);
-            listaprenotazioni.add(prenotazione);
-        } catch (InputMismatchException e) {
-            System.out.println("Errore: Inserisci un numero valido.");
-            scanner.next();
-        }
-        catch (Exception e) {
-            System.out.println("Si è verificato un errore: " + e.getMessage());
+                Prenotazioni prenotazione = new Prenotazioni(data_arrivo, data_partenza, numero_notti, idcliente, numerocamera);
+                System.out.println(prenotazione);
+                listaprenotazioni.add(prenotazione);
+                validinput = true;
+            }
+            catch (Exception e) {
+                System.out.println("Si è verificato un errore: " + e.getMessage());
+            }
+
+
         }
     }
 
@@ -155,13 +175,7 @@ public class GestionePrenotazioni {
 
     public static void main(String[] args) {
 
-        System.out.println("BENVENUTO NEL SISTEMA DI GESTIONE PRENOTAZIONI HOTEL TOKIO\n" +
-                "Premi 1 per registrarti come Cliente\n" +
-                "Premi 2 per prenotare una Camera\n" +
-                "Premi 3 per visualizzare le Camere Disponibili\n" +
-                "Premi 4 per visualizzare le tue Prenotazioni\n" +
-                "Premi 5 per cancellare una Prenotazione\n" +
-                "Premi 6 per uscire dal sistema\n");
+
 
         GestionePrenotazioni gestionePrenotazioni = new GestionePrenotazioni();
         gestionePrenotazioni.aggiungiCamera();
@@ -171,27 +185,41 @@ public class GestionePrenotazioni {
         //gestionePrenotazioni.visualizzaPrenotazioni();
         //gestionePrenotazioni.cancellaPrenotazione();
 
-        gestionePrenotazioni.setSelezione(scanner.nextInt());
+        boolean exitcicle = false;
+        while(!exitcicle) {
 
-        switch(gestionePrenotazioni.getSelezione()) {
-            case 1:
-                gestionePrenotazioni.aggiungiCliente();
-                break;
-            case 2:
-                gestionePrenotazioni.aggiungiPrenotazione();
-                break;
-            case 3:
-                gestionePrenotazioni.visualizzaCamereDisponibili();
-                break;
-            case 4:
-                gestionePrenotazioni.visualizzaPrenotazioni();
-                break;
-            case 5:
-                gestionePrenotazioni.cancellaPrenotazione();
-                break;
-            case 6:
-                System.out.println("Arrivederci!");
-                break;
+            System.out.println("BENVENUTO NEL SISTEMA DI GESTIONE PRENOTAZIONI HOTEL TOKIO\n" +
+                    "Premi 1 per registrarti come Cliente\n" +
+                    "Premi 2 per prenotare una Camera\n" +
+                    "Premi 3 per visualizzare le Camere Disponibili\n" +
+                    "Premi 4 per visualizzare le tue Prenotazioni\n" +
+                    "Premi 5 per cancellare una Prenotazione\n" +
+                    "Premi 6 per uscire dal sistema\n");
+
+            gestionePrenotazioni.setSelezione(scanner.nextInt());
+
+            switch (gestionePrenotazioni.getSelezione()) {
+                case 1:
+                    gestionePrenotazioni.aggiungiCliente();
+                    break;
+                case 2:
+                    gestionePrenotazioni.aggiungiPrenotazione();
+                    break;
+                case 3:
+                    gestionePrenotazioni.visualizzaCamereDisponibili();
+                    break;
+                case 4:
+                    gestionePrenotazioni.visualizzaPrenotazioni();
+                    break;
+                case 5:
+                    gestionePrenotazioni.cancellaPrenotazione();
+                    break;
+                case 6:
+                    System.out.println("Arrivederci!");
+                    exitcicle = true;
+                    break;
+
+            }
         }
 
 
