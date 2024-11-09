@@ -50,45 +50,95 @@ public class GestionePrenotazioni {
                 System.out.println("AGGIUNGI UN CLIENTE ");
                 System.out.println("Inserisci il tuo nome:");
                 String nome = scanner.next();
-                if (!nome.matches("[a-zA-Z]+")) {
-                    throw new IllegalArgumentException("Errore: Il nome deve contenere solo lettere.");
-                }
+                validaNome(nome);
+
                 System.out.println("Inserisci il tuo cognome:");
                 String cognome = scanner.next();
-                if (!nome.matches("[a-zA-Z]+")) {
-                    throw new IllegalArgumentException("Errore: Il cognome deve contenere solo lettere.");
-                }
+                validaCognome(cognome);
+
                 System.out.println("Inserisci la tua email:");
                 String email = scanner.next();
-                if (!email.matches("^(.+)@(.+)$")) {
-                    throw new IllegalArgumentException("Errore: Inserisci un'email valida.");
-                }
+                validaEmail(email);
+
                 System.out.println("Inserisci il tuo numero di telefono:");
                 String telefono = scanner.next();
-                if (!telefono.matches("[0-9]+")) {
-                    throw new IllegalArgumentException("Errore: Inserisci un numero di telefono valido.");
-                }
+                validaTelefono(telefono);
 
                 Random rand = new Random();
                 int codice = rand.nextInt(1000);
 
                 LocalDate today = LocalDate.now();
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-                String idcliente = today.format(formatter) + String.valueOf(codice);
+                String idcliente = today.format(formatter) + codice;
 
                 Cliente cliente = new Cliente(nome, cognome, email, telefono, null, idcliente);
                 System.out.println(cliente);
                 listaclienti.add(cliente);
                 validinput = true;
-            } catch (InputMismatchException e) {
-                System.out.println("Errore: Inserisci un numero valido.");
-                scanner.next();
             }
             catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
+                System.out.println("Si è verificato un errore: " + e.getMessage());
             }
         }
     }
+
+    public String validaNome(String nome) {
+        if (!nome.matches("[a-zA-Z]+")) {
+            throw new IllegalArgumentException("Errore: Il nome deve contenere solo lettere.");
+        }
+        return nome;
+    }
+
+    public String validaCognome(String cognome) {
+        if (!cognome.matches("[a-zA-Z]+")) {
+            throw new IllegalArgumentException("Errore: Il cognome deve contenere solo lettere.");
+        }
+        return cognome;
+    }
+
+    public String validaEmail(String email) {
+        if (!email.matches("^(.+)@(.+)$")) {
+            throw new IllegalArgumentException("Errore: Inserisci un'email valida.");
+        }
+        return email;
+    }
+
+    public String validaTelefono(String telefono) {
+        if (!telefono.matches("[0-9]+")) {
+            throw new IllegalArgumentException("Errore: Inserisci un numero di telefono valido.");
+        }
+        return telefono;
+    }
+
+    public String validaIdcliente(String idcliente) {
+        if (!idcliente.matches("[0-9]{11}")) {
+            throw new IllegalArgumentException("Errore: Il codice cliente deve contenere 11 numeri.");
+        }
+        return idcliente;
+    }
+
+    public String validaDataarrivo_partenza(String data_arrivo) {
+        if (!data_arrivo.matches("\\d{4}-\\d{2}-\\d{2}")) {
+            throw new IllegalArgumentException("Errore: Inserisci una data valida.");
+        }
+        return data_arrivo;
+    }
+
+    public String validaNumeronotti(int numero_notti) {
+        if (numero_notti < 1) {
+            throw new IllegalArgumentException("Errore: Inserisci un numero di notti valido.");
+        }
+        return String.valueOf(numero_notti);
+    }
+
+    public int validaNumerocamera(int numerocamera) {
+        if (numerocamera < 1 || numerocamera > 5) {
+            throw new IllegalArgumentException("Errore: Inserisci un numero di camera valido.");
+        }
+        return numerocamera;
+    }
+
+
 
 
     public void visualizzaCamereDisponibili() {
@@ -110,7 +160,7 @@ public class GestionePrenotazioni {
                 listaprenotazioni.remove(i);
             }
         }
-
+        System.out.println("PRENOTAZIONE CANCELLATA");
     }
 
 
@@ -121,29 +171,23 @@ public class GestionePrenotazioni {
                 System.out.println("AGGIUNGI UNA PRENOTAZIONE ");
                 System.out.println("Inserisci il tuo id cliente:");
                 String idcliente = scanner.next();
-                if (!idcliente.matches("[0-9]{11}")) {
-                    throw new IllegalArgumentException("Errore: Il codice cliente deve contenere 11 numeri.");
-                }
+                validaIdcliente(idcliente);
+
                 System.out.println("Inserisci la data di arrivo yy-mm-dd:");
                 String data_arrivo = scanner.next();
-                if (!data_arrivo.matches("\\d{4}-\\d{2}-\\d{2}")) {
-                    throw new IllegalArgumentException("Errore: Inserisci una data valida.");
-                }
+                validaDataarrivo_partenza(data_arrivo);
+
                 System.out.println("Inserisci la data di partenza yy-mm-dd:");
                 String data_partenza = scanner.next();
-                if (!data_partenza.matches("\\d{4}-\\d{2}-\\d{2}")) {
-                    throw new IllegalArgumentException("Errore: Inserisci una data valida.");
-                }
+                validaDataarrivo_partenza(data_partenza);
+                
                 System.out.println("Inserisci il numero di notti:");
                 int numero_notti = scanner.nextInt();
-                if (numero_notti < 1) {
-                    throw new IllegalArgumentException("Errore: Inserisci un numero di notti valido.");
-                }
+                validaNumeronotti(numero_notti);
+
                 System.out.println("Inserisci il numero della camera:");
                 int numerocamera = scanner.nextInt();
-                if (numerocamera < 1 || numerocamera > 5) {
-                    throw new IllegalArgumentException("Errore: Inserisci un numero di camera valido.");
-                }
+                validaNumerocamera(numerocamera);
 
                 Prenotazioni prenotazione = new Prenotazioni(data_arrivo, data_partenza, numero_notti, idcliente, numerocamera);
                 System.out.println(prenotazione);
