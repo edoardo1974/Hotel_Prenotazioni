@@ -4,6 +4,8 @@ import com.Tokio.model.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -202,6 +204,51 @@ public class GestionePrenotazioni {
         }
     }
 
+    public void aggiungiPrenotazioneThread() {
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+
+        Runnable task1 = () -> {
+            try {
+                //System.out.println("Inserisci l'Id cliente per fare una prenotazione");
+                //String idcliente = scanner.next();
+                //validaIdcliente(idcliente);
+
+                //Cliente cliente1 = creaClienteConThread("primo");
+                synchronized (listaprenotazioni) {
+                    aggiungiPrenotazione();
+                    //listaprenotazioni.add(aggiungiPrenotazione());
+                    System.out.println("Prenotazione per il primo cliente aggiunta con successo.");
+                }
+            } catch (Exception e) {
+                System.out.println("Errore nella prenotazione del primo cliente: " + e.getMessage());
+            }
+        };
+
+        Runnable task2 = () -> {
+            try {
+                //System.out.println("Thread per il secondo cliente in esecuzione...");
+                //Cliente cliente2 = creaClienteConThread("secondo");
+                synchronized (listaprenotazioni) {
+                    //listaprenotazioni.add(new Prenotazione(cliente2));
+                    System.out.println("Prenotazione per il secondo cliente aggiunta con successo.");
+                }
+            } catch (Exception e) {
+                System.out.println("Errore nella prenotazione del secondo cliente: " + e.getMessage());
+            }
+        };
+
+        // Esegui i task
+        executor.execute(task1);
+        executor.execute(task2);
+
+        // Chiudi l'executor (non accetta più nuovi task)
+        executor.shutdown();
+
+    }
+
+
+
+
     public void visualizzaPrenotazioni() {
         System.out.println("VISUALIZZA UNA PRENOTAZIONE ");
         System.out.println("Inserisci il tuo codice utente");
@@ -219,15 +266,8 @@ public class GestionePrenotazioni {
 
     public static void main(String[] args) {
 
-
-
         GestionePrenotazioni gestionePrenotazioni = new GestionePrenotazioni();
         gestionePrenotazioni.aggiungiCamera();
-        //gestionePrenotazioni.visualizzaCamereDisponibili();
-        //gestionePrenotazioni.aggiungiCliente();
-        //gestionePrenotazioni.aggiungiPrenotazione();
-        //gestionePrenotazioni.visualizzaPrenotazioni();
-        //gestionePrenotazioni.cancellaPrenotazione();
 
         boolean exitcicle = false;
         while(!exitcicle) {
