@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class Test_1 extends GestionePrenotazioni {
@@ -80,6 +81,30 @@ public class Test_1 extends GestionePrenotazioni {
         Prenotazioni prenotazione = new Prenotazioni(data_arrivo, data_partenza, numero_notti, idcliente, numerocamera);
         System.out.println(prenotazione);
         listaprenotazioni.add(prenotazione);
+    }
+
+    @Test
+    public void test_add_reservation_first_client() {
+        GestionePrenotazioni gestionePrenotazioni = new GestionePrenotazioni();
+        gestionePrenotazioni.aggiungiPrenotazioneThread();
+
+        // Assuming the listaprenotazioni is accessible and we can check its size
+        assertEquals(1, gestionePrenotazioni.getListaprenotazioni().size());
+        System.out.println("Test for adding reservation for the first client passed.");
+    }
+
+    @Test
+    public void test_handle_exception_first_client() {
+        GestionePrenotazioni gestionePrenotazioni = new GestionePrenotazioni();
+
+        // Simulate an exception scenario, e.g., invalid input
+        // This might require mocking or altering the method to throw an exception
+        try {
+            gestionePrenotazioni.aggiungiPrenotazioneThread();
+            fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            System.out.println("Exception handled successfully: " + e.getMessage());
+        }
     }
 
 

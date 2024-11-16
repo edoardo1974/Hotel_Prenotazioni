@@ -10,6 +10,8 @@ import java.util.concurrent.Executors;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.xml.validation.Validator;
+
 import static com.ibm.icu.text.PluralRules.Operand.e;
 
 public class GestionePrenotazioni {
@@ -19,17 +21,9 @@ public class GestionePrenotazioni {
     private List<Cliente> listaclienti = new ArrayList<Cliente>();
     @Getter
     private List<Camera> listacamera = new ArrayList<Camera>();
-    @Setter
-    @Getter
+    @Setter @Getter
     private int selezione;
     static Scanner scanner = new Scanner(System.in);
-
-
-    /*public GestionePrenotazioni(List<Prenotazioni> listaprenotazioni) {
-        this.listaprenotazioni = listaprenotazioni;
-    }
-
-     */
 
     public void aggiungiCamera() {
         listacamera.add(new Camera(100, "occupata", null, "singola", 1));
@@ -37,12 +31,7 @@ public class GestionePrenotazioni {
         listacamera.add(new Camera(200, "libera", null, "suite", 3));
         listacamera.add(new Camera(250, "libera", null, "suite", 4));
         listacamera.add(new Camera(300, "libera", null, "suite", 5));
-        /*for(int i = 0; i < listacamera.size(); i++) {
-            System.out.println(listacamera.get(i));
-        }
-
-         */
-        System.out.println(" ");
+        //System.out.println(" ");
     }
 
     public void aggiungiCliente() {
@@ -50,28 +39,29 @@ public class GestionePrenotazioni {
         while(!validinput) {
             try {
                 System.out.println("AGGIUNGI UN CLIENTE ");
-                System.out.println("Inserisci il tuo nome:");
-                String nome = scanner.next();
-                validaNome(nome);
+                //System.out.println("Inserisci il tuo nome:");
+                String nome = getInput("Inserisci il tuo nome:", this::validaNome);
+                //String nome = scanner.next();
+                //validaNome(nome);
 
-                System.out.println("Inserisci il tuo cognome:");
-                String cognome = scanner.next();
-                validaCognome(cognome);
+                //System.out.println("Inserisci il tuo cognome:");
+                String cognome = getInput("Inserisci il tuo cognome:", this::validaCognome);
+                //validaCognome(cognome);
 
-                System.out.println("Inserisci la tua email:");
-                String email = scanner.next();
-                validaEmail(email);
+                //System.out.println("Inserisci la tua email:");
+                String email = getInput("Inserisci la tua email:", this::validaEmail);
+                //validaEmail(email);
 
-                System.out.println("Inserisci il tuo numero di telefono:");
-                String telefono = scanner.next();
-                validaTelefono(telefono);
+                //System.out.println("Inserisci il tuo numero di telefono:");
+                String telefono = getInput("Inserisci il tuo numero di telefono:", this::validaTelefono);
+                //validaTelefono(telefono);
 
-                Random rand = new Random();
-                int codice = rand.nextInt(1000);
+                //Random rand = new Random();
+                //int codice = rand.nextInt(1000);
 
-                LocalDate today = LocalDate.now();
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-                String idcliente = today.format(formatter) + codice;
+                //LocalDate today = LocalDate.now();
+                //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+                String idcliente = generateIdCliente();
 
                 Cliente cliente = new Cliente(nome, cognome, email, telefono, null, idcliente);
                 System.out.println(cliente);
@@ -82,6 +72,25 @@ public class GestionePrenotazioni {
                 System.out.println("Si è verificato un errore: " + e.getMessage());
             }
         }
+    }
+
+    @FunctionalInterface
+    public interface Validator {
+        String validate(String input);
+    }
+
+    private String getInput(String prompt, Validator validator) {
+        System.out.println(prompt);
+        String input = scanner.next();
+        return validator.validate(input);
+    }
+
+    private String generateIdCliente() {
+        Random rand = new Random();
+        int codice = rand.nextInt(1000);
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        return today.format(formatter) + codice;
     }
 
     public String validaNome(String nome) {
@@ -126,15 +135,17 @@ public class GestionePrenotazioni {
         return data_arrivo;
     }
 
-    public String validaNumeronotti(int numero_notti) {
-        if (numero_notti < 1) {
+    public String validaNumeronotti(String numero_notti) {
+        int numero= Integer.parseInt(numero_notti);
+        if (numero < 1) {
             throw new IllegalArgumentException("Errore: Inserisci un numero di notti valido.");
         }
-        return String.valueOf(numero_notti);
+        return numero_notti;
     }
 
-    public int validaNumerocamera(int numerocamera) {
-        if (numerocamera < 1 || numerocamera > 5) {
+    public String validaNumerocamera(String numerocamera) {
+        int numero= Integer.parseInt(numerocamera);
+        if (numero < 1 || numero > 5) {
             throw new IllegalArgumentException("Errore: Inserisci un numero di camera valido.");
         }
         return numerocamera;
@@ -172,29 +183,35 @@ public class GestionePrenotazioni {
             try {
                 System.out.println("AGGIUNGI UNA PRENOTAZIONE ");
                 System.out.println("Inserisci il tuo id cliente:");
-                String idcliente = scanner.next();
-                validaIdcliente(idcliente);
+                String idcliente = getInput("Inserisci il tuo id cliente:", this::validaIdcliente);
+                //String idcliente = scanner.next();
+                //validaIdcliente(idcliente);
 
                 System.out.println("Inserisci la data di arrivo yy-mm-dd:");
-                String data_arrivo = scanner.next();
-                validaDataarrivo_partenza(data_arrivo);
+                String data_arrivo = getInput("Inserisci la data di arrivo yy-mm-dd:", this::validaDataarrivo_partenza);
+                //String data_arrivo = scanner.next();
+                //validaDataarrivo_partenza(data_arrivo);
 
-                System.out.println("Inserisci la data di partenza yy-mm-dd:");
-                String data_partenza = scanner.next();
-                validaDataarrivo_partenza(data_partenza);
+                //System.out.println("Inserisci la data di partenza yy-mm-dd:");
+                String data_partenza = getInput("Inserisci la data di partenza yy-mm-dd:", this::validaDataarrivo_partenza);
+                //String data_partenza = scanner.next();
+                //validaDataarrivo_partenza(data_partenza);
                 
-                System.out.println("Inserisci il numero di notti:");
-                int numero_notti = scanner.nextInt();
-                validaNumeronotti(numero_notti);
+                //System.out.println("Inserisci il numero di notti:");
+                int numero_notti = Integer.parseInt(getInput("Inserisci il numero di notti:", this::validaNumeronotti));
+                //validaNumeronotti(numero_notti);
 
-                System.out.println("Inserisci il numero della camera:");
-                int numerocamera = scanner.nextInt();
-                validaNumerocamera(numerocamera);
+                //System.out.println("Inserisci il numero della camera:");
+                int numerocamera = Integer.parseInt(getInput("Inserisci il numero della camera:", this::validaNumerocamera));
+                //validaNumerocamera(numerocamera);
 
                 Prenotazioni prenotazione = new Prenotazioni(data_arrivo, data_partenza, numero_notti, idcliente, numerocamera);
                 System.out.println(prenotazione);
                 listaprenotazioni.add(prenotazione);
                 validinput = true;
+            }
+            catch (IllegalArgumentException e) {
+                System.out.println("Si è verificato un errore: " + e.getMessage());
             }
             catch (Exception e) {
                 System.out.println("Si è verificato un errore: " + e.getMessage());
@@ -209,14 +226,8 @@ public class GestionePrenotazioni {
 
         Runnable task1 = () -> {
             try {
-                //System.out.println("Inserisci l'Id cliente per fare una prenotazione");
-                //String idcliente = scanner.next();
-                //validaIdcliente(idcliente);
-
-                //Cliente cliente1 = creaClienteConThread("primo");
                 synchronized (listaprenotazioni) {
                     aggiungiPrenotazione();
-                    //listaprenotazioni.add(aggiungiPrenotazione());
                     System.out.println("Prenotazione per il primo cliente aggiunta con successo.");
                 }
             } catch (Exception e) {
@@ -226,10 +237,8 @@ public class GestionePrenotazioni {
 
         Runnable task2 = () -> {
             try {
-                //System.out.println("Thread per il secondo cliente in esecuzione...");
-                //Cliente cliente2 = creaClienteConThread("secondo");
                 synchronized (listaprenotazioni) {
-                    //listaprenotazioni.add(new Prenotazione(cliente2));
+                    aggiungiPrenotazione();
                     System.out.println("Prenotazione per il secondo cliente aggiunta con successo.");
                 }
             } catch (Exception e) {
@@ -305,11 +314,5 @@ public class GestionePrenotazioni {
 
             }
         }
-
-
     }
-
-
-
-
 }
