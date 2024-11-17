@@ -165,15 +165,16 @@ public class GestionePrenotazioni {
     }
 
     public void cancellaPrenotazione() {
-        System.out.println("CANCELLA PRENOTAZIONE /n Inserisci il tuo id cliente:");
-        String idcliente = scanner.next();
+        System.out.println("CANCELLA PRENOTAZIONE /n");
+        String idcliente = getInput("Inserisci il tuo id cliente:", this::validaIdcliente);
 
-        for(int i=0;i<listaprenotazioni.size();i++) {
-            if(listaprenotazioni.get(i).getIdcliente().equals(idcliente)) {
-                listaprenotazioni.remove(i);
-            }
+        if(listaprenotazioni.isEmpty()) {
+            System.out.println("Non ci sono prenotazioni\n");
         }
-        System.out.println("PRENOTAZIONE CANCELLATA");
+        else{
+            verificaseCancellarePrenotazione(idcliente);
+        }
+
     }
 
 
@@ -182,32 +183,20 @@ public class GestionePrenotazioni {
         while(!validinput) {
             try {
                 System.out.println("AGGIUNGI UNA PRENOTAZIONE ");
-                System.out.println("Inserisci il tuo id cliente:");
                 String idcliente = getInput("Inserisci il tuo id cliente:", this::validaIdcliente);
-                //String idcliente = scanner.next();
-                //validaIdcliente(idcliente);
-
-                System.out.println("Inserisci la data di arrivo yy-mm-dd:");
                 String data_arrivo = getInput("Inserisci la data di arrivo yy-mm-dd:", this::validaDataarrivo_partenza);
-                //String data_arrivo = scanner.next();
-                //validaDataarrivo_partenza(data_arrivo);
-
-                //System.out.println("Inserisci la data di partenza yy-mm-dd:");
                 String data_partenza = getInput("Inserisci la data di partenza yy-mm-dd:", this::validaDataarrivo_partenza);
-                //String data_partenza = scanner.next();
-                //validaDataarrivo_partenza(data_partenza);
-                
-                //System.out.println("Inserisci il numero di notti:");
                 int numero_notti = Integer.parseInt(getInput("Inserisci il numero di notti:", this::validaNumeronotti));
-                //validaNumeronotti(numero_notti);
-
-                //System.out.println("Inserisci il numero della camera:");
                 int numerocamera = Integer.parseInt(getInput("Inserisci il numero della camera:", this::validaNumerocamera));
-                //validaNumerocamera(numerocamera);
 
                 Prenotazioni prenotazione = new Prenotazioni(data_arrivo, data_partenza, numero_notti, idcliente, numerocamera);
-                System.out.println(prenotazione);
                 listaprenotazioni.add(prenotazione);
+
+                verificaNumeroCamera(numerocamera);
+
+                listacamera.get(numerocamera-1).setStato_camera("occupata");
+                System.out.println(prenotazione);
+
                 validinput = true;
             }
             catch (IllegalArgumentException e) {
@@ -219,6 +208,15 @@ public class GestionePrenotazioni {
 
 
         }
+    }
+
+    public void verificaNumeroCamera(int numerocamera) {
+        if(listacamera.get(numerocamera-1).getStato_camera().equals("occupata")) {
+            throw new IllegalArgumentException("Errore: La camera è già occupata.");
+        }
+
+
+
     }
 
     public void aggiungiPrenotazioneThread() {
@@ -259,14 +257,59 @@ public class GestionePrenotazioni {
 
 
     public void visualizzaPrenotazioni() {
+
         System.out.println("VISUALIZZA UNA PRENOTAZIONE ");
-        System.out.println("Inserisci il tuo codice utente");
-        String codicecliente = scanner.next();
+        //System.out.println("Inserisci il tuo codice utente");
+        String codicecliente = getInput("Inserisci il tuo id cliente:", this::validaIdcliente);
+        if(listaprenotazioni.isEmpty()) {
+            System.out.println("Non ci sono prenotazioni\n");
+        }
+        else{
+            verificaseEsisteidCliente(codicecliente);
+        }
+    }
+
+    public void verificaseEsisteidCliente(String idcliente) {
+        int count = 0;
         for(int i = 0; i < listaprenotazioni.size(); i++) {
-            if(listaprenotazioni.get(i).getIdcliente().equals(codicecliente)) {
-                System.out.println(listaprenotazioni.get(i));
+            if(listaprenotazioni.get(i).getIdcliente().equals(idcliente)) {
+                System.out.println(listaprenotazioni.get(i)+"\n");
+            }
+            else count+=1;
+        }
+        if(listaprenotazioni.size()!=0) {
+            if(count == listaprenotazioni.size()) {
+                System.out.println("Non ci sono prenotazioni per questo cliente\n");
             }
         }
+    }
+
+    public void verificaseCancellarePrenotazione(String idcliente) {
+        int count = 0;
+        for(int i = 0; i < listaprenotazioni.size(); i++) {
+            if(listaprenotazioni.get(i).getIdcliente().equals(idcliente)) {
+                listaprenotazioni.remove(i);
+                modificaStatocamera(i);
+                System.out.println("PRENOTAZIONE CANCELLATA");
+            }
+            else {count+=1;}
+        }
+        if(listaprenotazioni.size()!=0) {
+            if(count == listaprenotazioni.size()) {
+                System.out.println("Non ci sono prenotazioni per questo cliente\n");
+            }
+        }
+
+    }
+
+
+    public void modificaStatocamera(int i){
+        for (int j = 0; j < listacamera.size(); j++) {
+            if (listacamera.get(j).getNumerocamera() == listaprenotazioni.get(i).getNumerocamera()) {
+                listacamera.get(j).setStato_camera("libera");
+            }
+        }
+
 
     }
 

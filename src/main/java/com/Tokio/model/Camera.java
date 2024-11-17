@@ -5,7 +5,7 @@ import lombok.Setter;
 public class Camera extends Dati {
     @Getter
     private int prezzo_notte;
-    @Getter
+    @Getter @Setter
     private String stato_camera;
 
     public Camera(int prezzo_notte, String stato_camera, String idcliente, String tipodicamera, int numerocamera) {

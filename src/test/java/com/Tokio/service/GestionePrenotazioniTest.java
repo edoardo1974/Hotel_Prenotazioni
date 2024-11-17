@@ -75,4 +75,27 @@ class GestionePrenotazioniTest {
 
         assertTrue(gestionePrenotazioni.getListaprenotazioni().isEmpty());
     }
+
+    @Test
+    public void test_remove_reservation_with_valid_id_last() {
+        GestionePrenotazioni gestionePrenotazioni = new GestionePrenotazioni();
+        Prenotazioni prenotazione = new Prenotazioni("2023-10-01", "2023-10-05", 4, "20231001001", 1);
+        Prenotazioni prenotazione1 = new Prenotazioni("2023-10-20", "2023-10-22", 2, "20231001005", 3);
+        gestionePrenotazioni.getListaprenotazioni().add(prenotazione);
+        gestionePrenotazioni.getListaprenotazioni().add(prenotazione1);
+
+        Scanner scanner = new Scanner(new java.io.ByteArrayInputStream("20231001001\n".getBytes()));
+
+        GestionePrenotazioni.scanner = scanner;
+
+        gestionePrenotazioni.cancellaPrenotazione();
+
+        for(int i = 0; i < gestionePrenotazioni.getListaprenotazioni().size(); i++) {
+            System.out.println(gestionePrenotazioni.getListaprenotazioni().get(i));
+        }
+
+
+    }
+
+
 }
