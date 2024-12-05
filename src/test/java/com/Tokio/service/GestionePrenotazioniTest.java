@@ -4,7 +4,10 @@ import com.Tokio.model.Cliente;
 import com.Tokio.model.Prenotazioni;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -95,6 +98,24 @@ class GestionePrenotazioniTest {
         }
 
 
+    }
+
+    @Test
+    public void test_adds_dates_between_arrival_and_departure() {
+        GestionePrenotazioni gp = new GestionePrenotazioni();
+        int roomNumber = 1;
+        gp.getRooms().put(roomNumber, new HashSet<>());
+
+        String arrivalDate = "2024-01-01";
+        String departureDate = "2024-01-03";
+
+        gp.verificaSegiornigiaoccupati(roomNumber, arrivalDate, departureDate);
+
+        Set<LocalDate> occupiedDays = gp.getRooms().get(roomNumber);
+        assertEquals(3, occupiedDays.size());
+        assertTrue(occupiedDays.contains(LocalDate.parse("2024-01-01")));
+        assertTrue(occupiedDays.contains(LocalDate.parse("2024-01-02")));
+        assertTrue(occupiedDays.contains(LocalDate.parse("2024-01-03")));
     }
 
 

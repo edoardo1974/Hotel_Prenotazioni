@@ -10,8 +10,6 @@ import java.util.concurrent.Executors;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.xml.validation.Validator;
-
 import static com.ibm.icu.text.PluralRules.Operand.e;
 
 public class GestionePrenotazioni {
@@ -22,6 +20,8 @@ public class GestionePrenotazioni {
     @Getter
     private List<Camera> listacamera = new ArrayList<Camera>();
     @Setter @Getter
+    private Map<Integer, Set<LocalDate>> rooms = new HashMap<>();
+    @Setter @Getter
     private int selezione;
     static Scanner scanner = new Scanner(System.in);
 
@@ -31,7 +31,15 @@ public class GestionePrenotazioni {
         listacamera.add(new Camera(200, "libera", null, "suite", 3));
         listacamera.add(new Camera(250, "libera", null, "suite", 4));
         listacamera.add(new Camera(300, "libera", null, "suite", 5));
-        //System.out.println(" ");
+
+        inizializzaCamereHashmap();
+
+    }
+
+    public void inizializzaCamereHashmap() {
+        for (int i = 1; i <= 5; i++) {
+            rooms.put(i, new HashSet<>());
+        }
     }
 
     public void aggiungiCliente() {
@@ -192,7 +200,9 @@ public class GestionePrenotazioni {
                 Prenotazioni prenotazione = new Prenotazioni(data_arrivo, data_partenza, numero_notti, idcliente, numerocamera);
                 listaprenotazioni.add(prenotazione);
 
-                verificaNumeroCamera(numerocamera);
+                verificaSegiornigiaoccupati(numerocamera,data_arrivo,data_partenza);
+
+                //verificaNumeroCamera(numerocamera);
 
                 listacamera.get(numerocamera-1).setStato_camera("occupata");
                 System.out.println(prenotazione);
@@ -210,13 +220,50 @@ public class GestionePrenotazioni {
         }
     }
 
-    public void verificaNumeroCamera(int numerocamera) {
+//verificare se cambiare procedura per la verifica delle camere occupate
+   /* public void verificaNumeroCamera(int numerocamera) {
         if(listacamera.get(numerocamera-1).getStato_camera().equals("occupata")) {
             throw new IllegalArgumentException("Errore: La camera è già occupata.");
+        }
+    }
+    
+    */
+
+    /*public void verificaGiornoCameraOccupata(int numerocamera,String data_arrivo, String data_partenza) {
+        if(listaprenotazioni.get(numerocamera-1).getData_arrivo().equals(data_arrivo)) {
+            throw new IllegalArgumentException("Errore: La camera è già occupata.");
+        }
+    }
+
+     */
+
+
+
+    public void verificaSegiornigiaoccupati (int numerocamera,String data_arrivo, String data_partenza){
+
+        LocalDate startDate = LocalDate.parse(data_arrivo);
+        LocalDate endDate = LocalDate.parse(data_partenza);
+        List<LocalDate> giorniTotalioccupati = new ArrayList<>();
+//ottiene i giorni compresi nella prenotazione e li aggiunge alla lista
+        LocalDate currentDate = startDate;
+        while (!currentDate.isAfter(endDate)) {
+            giorniTotalioccupati.add(currentDate);
+            currentDate = currentDate.plusDays(1); // Incrementa di 1 giorno
+        }
+        isAvailable(rooms, numerocamera, giorniTotalioccupati);//verifica se la stanza è disponibile
+        rooms.get(numerocamera).addAll(giorniTotalioccupati);//aggiunge i giorni occupati alla stanza
         }
 
 
 
+    public static boolean isAvailable(Map<Integer, Set<LocalDate>> rooms, int roomNumber, List<LocalDate> days) {
+        Set<LocalDate> bookedDays = rooms.get(roomNumber); // Giorni già prenotati per la stanza
+        for (LocalDate day : days) { // Controlla ogni giorno richiesto
+            if (bookedDays.contains(day)) { // Se il giorno è già prenotato
+                return false; // Non disponibile
+            }
+        }
+        return true; // Tutti i giorni sono disponibili
     }
 
     public void aggiungiPrenotazioneThread() {
