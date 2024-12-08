@@ -10,10 +10,9 @@ import java.util.concurrent.Executors;
 import lombok.Getter;
 import lombok.Setter;
 
-import static com.ibm.icu.text.PluralRules.Operand.e;
-
 public class GestionePrenotazioni {
     @Getter
+    @Setter
     private List<com.Tokio.model.Prenotazioni> listaprenotazioni = new ArrayList<com.Tokio.model.Prenotazioni>();
     @Getter
     private List<Cliente> listaclienti = new ArrayList<Cliente>();
@@ -159,9 +158,6 @@ public class GestionePrenotazioni {
         return numerocamera;
     }
 
-
-
-
     public void visualizzaCamereDisponibili() {
         System.out.println("VISUALIZZA CAMERE DISPONIBILI ");
         for(int i = 0; i < listacamera.size(); i++) {
@@ -198,68 +194,45 @@ public class GestionePrenotazioni {
                 int numerocamera = Integer.parseInt(getInput("Inserisci il numero della camera:", this::validaNumerocamera));
 
                 Prenotazioni prenotazione = new Prenotazioni(data_arrivo, data_partenza, numero_notti, idcliente, numerocamera);
-                listaprenotazioni.add(prenotazione);
 
                 verificaSegiornigiaoccupati(numerocamera,data_arrivo,data_partenza);
 
-                //verificaNumeroCamera(numerocamera);
-
-                listacamera.get(numerocamera-1).setStato_camera("occupata");
-                System.out.println(prenotazione);
-
+                if(verificaSegiornigiaoccupati(numerocamera,data_arrivo,data_partenza)){
+                    listaprenotazioni.add(prenotazione);
+                    System.out.println(prenotazione);
+                }
                 validinput = true;
             }
             catch (IllegalArgumentException e) {
                 System.out.println("Si è verificato un errore: " + e.getMessage());
             }
-            catch (Exception e) {
-                System.out.println("Si è verificato un errore: " + e.getMessage());
-            }
-
 
         }
     }
 
-//verificare se cambiare procedura per la verifica delle camere occupate
-   /* public void verificaNumeroCamera(int numerocamera) {
-        if(listacamera.get(numerocamera-1).getStato_camera().equals("occupata")) {
-            throw new IllegalArgumentException("Errore: La camera è già occupata.");
-        }
-    }
-    
-    */
-
-    /*public void verificaGiornoCameraOccupata(int numerocamera,String data_arrivo, String data_partenza) {
-        if(listaprenotazioni.get(numerocamera-1).getData_arrivo().equals(data_arrivo)) {
-            throw new IllegalArgumentException("Errore: La camera è già occupata.");
-        }
-    }
-
-     */
-
-
-
-    public void verificaSegiornigiaoccupati (int numerocamera,String data_arrivo, String data_partenza){
+    public boolean verificaSegiornigiaoccupati (int numerocamera,String data_arrivo, String data_partenza){
 
         LocalDate startDate = LocalDate.parse(data_arrivo);
         LocalDate endDate = LocalDate.parse(data_partenza);
-        List<LocalDate> giorniTotalioccupati = new ArrayList<>();
-//ottiene i giorni compresi nella prenotazione e li aggiunge alla lista
+        List<LocalDate> giorniTotalioccupati = new ArrayList<>();//ottiene i giorni compresi nella prenotazione e li aggiunge alla lista
         LocalDate currentDate = startDate;
         while (!currentDate.isAfter(endDate)) {
             giorniTotalioccupati.add(currentDate);
             currentDate = currentDate.plusDays(1); // Incrementa di 1 giorno
         }
-        isAvailable(rooms, numerocamera, giorniTotalioccupati);//verifica se la stanza è disponibile
-        rooms.get(numerocamera).addAll(giorniTotalioccupati);//aggiunge i giorni occupati alla stanza
+        if(isAvailable(rooms, numerocamera, giorniTotalioccupati)){
+            rooms.get(numerocamera).addAll(giorniTotalioccupati);
+            return true;
+        }
+        else return false;
+
         }
 
-
-
-    public static boolean isAvailable(Map<Integer, Set<LocalDate>> rooms, int roomNumber, List<LocalDate> days) {
+    public boolean isAvailable(Map<Integer, Set<LocalDate>> rooms, int roomNumber, List<LocalDate> days) {
         Set<LocalDate> bookedDays = rooms.get(roomNumber); // Giorni già prenotati per la stanza
         for (LocalDate day : days) { // Controlla ogni giorno richiesto
-            if (bookedDays.contains(day)) { // Se il giorno è già prenotato
+            if (bookedDays.contains(day)) {
+                System.out.println("Prenotazione non valida perche' giorni gia' occupati");// Se il giorno è già prenotato
                 return false; // Non disponibile
             }
         }
@@ -331,12 +304,15 @@ public class GestionePrenotazioni {
         }
     }
 
-    public void verificaseCancellarePrenotazione(String idcliente) {
+    public void verificaseCancellarePrenotazione(String idcliente,int roomNumber) {
         int count = 0;
+        Set<LocalDate> bookedDays = rooms.get(roomNumber);
         for(int i = 0; i < listaprenotazioni.size(); i++) {
             if(listaprenotazioni.get(i).getIdcliente().equals(idcliente)) {
+
+                rooms.get(listaprenotazioni.get(i).getNumerocamera()).removeAll(giorniTotalioccupati);
                 listaprenotazioni.remove(i);
-                modificaStatocamera(i);
+                //modificaStatocamera(i);
                 System.out.println("PRENOTAZIONE CANCELLATA");
             }
             else {count+=1;}

@@ -17,7 +17,6 @@ public class Prenotazioni extends Dati {
         this.numero_notti = numero_notti;
     }
 
-
     @Override
     public String toString() {
         return "Prenotazioni{" +

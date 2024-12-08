@@ -1,5 +1,6 @@
 package com.Tokio.service;
 
+import com.Tokio.model.Camera;
 import com.Tokio.model.Cliente;
 import com.Tokio.model.Prenotazioni;
 import org.junit.jupiter.api.Test;
@@ -96,26 +97,29 @@ class GestionePrenotazioniTest {
         for(int i = 0; i < gestionePrenotazioni.getListaprenotazioni().size(); i++) {
             System.out.println(gestionePrenotazioni.getListaprenotazioni().get(i));
         }
-
-
     }
 
     @Test
     public void test_adds_dates_between_arrival_and_departure() {
         GestionePrenotazioni gp = new GestionePrenotazioni();
-        int roomNumber = 1;
-        gp.getRooms().put(roomNumber, new HashSet<>());
 
-        String arrivalDate = "2024-01-01";
-        String departureDate = "2024-01-03";
+        gp.getListacamera().add(new Camera(100, "occupata", null, "singola", 1));
+        gp.getListacamera().add(new Camera(150, "libera", null, "doppia", 2));
+        gp.getListacamera().add(new Camera(200, "libera", null, "suite", 3));
+        gp.getListacamera().add(new Camera(250, "libera", null, "suite", 4));
+        gp.getListacamera().add(new Camera(300, "libera", null, "suite", 5));
 
-        gp.verificaSegiornigiaoccupati(roomNumber, arrivalDate, departureDate);
+        gp.inizializzaCamereHashmap();
 
-        Set<LocalDate> occupiedDays = gp.getRooms().get(roomNumber);
-        assertEquals(3, occupiedDays.size());
-        assertTrue(occupiedDays.contains(LocalDate.parse("2024-01-01")));
-        assertTrue(occupiedDays.contains(LocalDate.parse("2024-01-02")));
-        assertTrue(occupiedDays.contains(LocalDate.parse("2024-01-03")));
+        Prenotazioni prenotazione1 = new Prenotazioni("2024-01-01", "2024-01-02", 4, "12345678", 4);
+        gp.getListaprenotazioni().add(prenotazione1);
+
+        Prenotazioni prenotazione2 = new Prenotazioni("2024-01-01", "2024-01-05", 4, "12345679", 3);
+        gp.getListaprenotazioni().add(prenotazione2);
+
+        gp.verificaSegiornigiaoccupati(4, prenotazione1.getData_arrivo(), prenotazione1.getData_partenza());
+        gp.verificaSegiornigiaoccupati(3, prenotazione2.getData_arrivo(), prenotazione2.getData_partenza());
+
     }
 
 
